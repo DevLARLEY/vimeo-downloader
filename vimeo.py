@@ -67,7 +67,8 @@ class Vimeo:
 
     def _save_playlist(
             self,
-            stream: dict
+            stream: dict,
+            content_type: str
     ) -> str:
 
         stream_base = urljoin(
@@ -93,11 +94,11 @@ class Vimeo:
                 }
             )
 
-        init = f'{stream.get('id', 'NO_ID')}_init.mp4'
+        init = f'{stream.get('id', 'NO_ID')}_{content_type}_init.mp4'
         with open(join(self.output_path, init), 'wb') as f:
             f.write(b64decode(stream.get('init_segment')))
 
-        playlist = f'{stream.get('id', 'NO_ID')}.m3u8'
+        playlist = f'{stream.get('id', 'NO_ID')}_{content_type}.m3u8'
         with open(join(self.output_path, playlist), 'w') as f:
             f.writelines(
                 [
@@ -122,7 +123,7 @@ class Vimeo:
             video: dict
     ) -> dict:
 
-        playlist_url = self._save_playlist(video)
+        playlist_url = self._save_playlist(video, 'video')
 
         return {
             'url': playlist_url,
@@ -137,7 +138,7 @@ class Vimeo:
             audio: dict
     ) -> dict:
 
-        playlist_url = self._save_playlist(audio)
+        playlist_url = self._save_playlist(audio, 'audio')
 
         return {
             'url': playlist_url,
