@@ -23,7 +23,7 @@ Will output an HLS manifest file that can be played/converted locally.
 > Does not work on embedded videos.
 
 ```
-usage: test.py [-h] [--id ID]
+usage: vimeo_api.py [-h] [--id ID]
 
 options:
   -h, --help  show this help message and exit
