@@ -34,6 +34,7 @@ class Vimeo:
         self.audio_streams = []
 
     def send_request(self) -> bool:
+        logging.info('Sending request')
         self.response = requests.get(
             url=self.playlist_url
         )
@@ -41,11 +42,13 @@ class Vimeo:
         return self.response.status_code == 200
 
     def parse_playlist(self) -> bool:
+        logging.info('Loading playlist')
         try:
             parsed = json.loads(self.response.text)
         except Exception:
             return False
 
+        logging.info('Parsing playlist')
         self.clip_id = parsed.get('clip_id')
 
         self.videos = sorted(
@@ -99,6 +102,8 @@ class Vimeo:
             f.write(b64decode(stream.get('init_segment')))
 
         playlist = f'{stream.get('id', 'NO_ID')}_{content_type}.m3u8'
+        logging.info(f'Saving {playlist}')
+
         with open(join(self.output_path, playlist), 'w') as f:
             f.writelines(
                 [
@@ -153,6 +158,8 @@ class Vimeo:
             audio_streams: list
     ) -> str:
         master = f'master_{self.clip_id}.m3u8'
+        logging.info(f'Saving {master}')
+
         with open(join(self.output_path, master), 'w') as f:
             f.writelines(
                 [
@@ -185,6 +192,7 @@ class Vimeo:
         return master
 
     def save_media(self):
+        logging.info('Saving video')
         self.video_streams = list(
             map(
                 self._save_video_stream,
@@ -192,6 +200,7 @@ class Vimeo:
             )
         )
 
+        logging.info('Saving audio')
         self.audio_streams = list(
             map(
                 self._save_audio_stream,
@@ -199,6 +208,7 @@ class Vimeo:
             )
         )
 
+        logging.info('Saving master')
         return self._save_master(
             self.video_streams,
             self.audio_streams
