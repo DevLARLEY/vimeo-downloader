@@ -5,7 +5,6 @@ Creates an HLS(m3u8) Manifest from a vimeo video in the specified output path. H
 > [!IMPORTANT]  
 > The input URL is not the video URL but rather the 'playlist.json'/'master.json' URL found in the network tab.
 
-![example](https://github.com/DevLARLEY/vimeo-downloader/assets/121249322/07948ea5-e087-40ea-b349-6f0aff940d4e)
 ```
 usage: vimeo_json.py [-h] [--url URL] [--output OUTPUT]
 
@@ -16,3 +15,13 @@ options:
 ```
 
 # vimeo_api.py
+> [!IMPORTANT]  
+> Input the video ID (e.g. 676247342) from the video URL.
+
+```
+usage: test.py [-h] [--id ID]
+
+options:
+  -h, --help  show this help message and exit
+  --id ID
+```
