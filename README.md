@@ -16,8 +16,11 @@ options:
 Will output an HLS manifest file that can be played/converted locally.
 
 # vimeo_api.py
-> [!IMPORTANT]  
+> [!NOTE]  
 > Input the video ID (e.g. 676247342) from the video URL.
+
+> [!IMPORTANT]  
+> Does not work on embedded videos.
 
 ```
 usage: test.py [-h] [--id ID]
