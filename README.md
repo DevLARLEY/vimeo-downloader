@@ -26,5 +26,5 @@ options:
   -h, --help  show this help message and exit
   --id ID
 ```
-Will output an HLS manifest file that can be played/converted online as its segments are relative to the URL.
+Will output an HLS manifest file that can be played/converted online as its segments are relative to the URL.\
 For VLC: Media -> Open Network Stream... 
