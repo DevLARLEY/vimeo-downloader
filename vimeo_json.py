@@ -1,4 +1,3 @@
-
 import argparse
 import json
 import logging
@@ -229,7 +228,7 @@ if __name__ == '__main__':
         '--no-download',
         action="store_true",
         default=False,
-        help='Download the manifest',
+        help="Don't download the manifest",
         required=False
     )
     args = parser.parse_args()
