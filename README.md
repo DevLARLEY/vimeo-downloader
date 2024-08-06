@@ -12,9 +12,11 @@ options:
   -h, --help       show this help message and exit
   --url URL
   --output OUTPUT
-  --no-download    Download the manifest
+  --no-download    Don't download the manifest
 ```
 Will output an HLS manifest file that can be played/converted locally.
+> [!NOTE]  
+> Downloading requires N_m3u8DL-RE and ffmpeg
 
 # vimeo_api.py
 > [!NOTE]  
