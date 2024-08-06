@@ -1,6 +1,9 @@
+
 import argparse
 import json
 import logging
+import os
+import subprocess
 from base64 import b64decode
 from os.path import join
 from pathlib import Path
@@ -72,7 +75,7 @@ class Vimeo:
             self,
             stream: dict,
             content_type: str
-    ) -> str:
+    ) -> tuple[str, str]:
 
         stream_base = urljoin(
             self.main_base,
@@ -121,21 +124,22 @@ class Vimeo:
                 f.write(f'{segment.get('url', '')}\n')
             f.write("#EXT-X-ENDLIST\n")
 
-        return playlist
+        return playlist, init
 
     def _save_video_stream(
             self,
             video: dict
     ) -> dict:
 
-        playlist_url = self._save_playlist(video, 'video')
+        playlist_url, init = self._save_playlist(video, 'video')
 
         return {
             'url': playlist_url,
             'resolution': f'{video.get('width')}x{video.get('height')}',
             'bandwidth': video.get('bitrate'),
             'average_bandwidth': video.get('avg_bitrate'),
-            'codecs': video.get('codecs')
+            'codecs': video.get('codecs'),
+            'init': init
         }
 
     def _save_audio_stream(
@@ -143,13 +147,14 @@ class Vimeo:
             audio: dict
     ) -> dict:
 
-        playlist_url = self._save_playlist(audio, 'audio')
+        playlist_url, init = self._save_playlist(audio, 'audio')
 
         return {
             'url': playlist_url,
             'channels': audio.get('channels'),
             'bitrate': audio.get('bitrate'),
-            'sample_rate': audio.get('sample_rate')
+            'sample_rate': audio.get('sample_rate'),
+            'init': init
         }
 
     def _save_master(
@@ -192,7 +197,7 @@ class Vimeo:
 
         return master
 
-    def save_media(self):
+    def save_media(self) -> tuple[str, list]:
         logging.info('Saving video')
         self.video_streams = list(
             map(
@@ -213,13 +218,20 @@ class Vimeo:
         return self._save_master(
             self.video_streams,
             self.audio_streams
-        )
+        ), [*self.video_streams, *self.audio_streams]
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--url", action="store")
     parser.add_argument("--output", action="store", default=".")
+    parser.add_argument(
+        '--no-download',
+        action="store_true",
+        default=False,
+        help='Download the manifest',
+        required=False
+    )
     args = parser.parse_args()
 
     logging.basicConfig(format='[%(levelname)s]: %(message)s', level=logging.INFO)
@@ -239,7 +251,27 @@ if __name__ == '__main__':
     if not dl.parse_playlist():
         logging.error("Unable to parse playlist")
         exit(-1)
-    if (master_file := dl.save_media()) is None:
+
+    master_file, streams = dl.save_media()
+    if master_file is None:
         logging.error("Unable to save media")
 
     logging.info(f"Master Playlist => {master_file}")
+
+    if not args.no_download:
+        subprocess.run(
+            [
+                "N_m3u8DL-RE",
+                master_file,
+                "-M",
+                "format=mkv",
+                "--no-log",
+                "-sv", "best",
+                "-sa", "best"
+            ],
+            shell=False
+        )
+        for stream in streams:
+            os.remove(stream.get('url'))
+            os.remove(stream.get('init'))
+        os.remove(master_file)
