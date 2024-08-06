@@ -6,12 +6,13 @@ Creates an HLS(m3u8) Manifest from a vimeo video in the specified output path. H
 > The input URL is not the video URL but rather the 'playlist.json'/'master.json' URL found in the network tab.
 
 ```
-usage: vimeo_json.py [-h] [--url URL] [--output OUTPUT]
+usage: vimeo_json.py [-h] [--url URL] [--output OUTPUT] [--no-download]
 
 options:
   -h, --help       show this help message and exit
   --url URL
   --output OUTPUT
+  --no-download    Download the manifest
 ```
 Will output an HLS manifest file that can be played/converted locally.
 
