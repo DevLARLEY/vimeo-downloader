@@ -240,37 +240,39 @@ if __name__ == '__main__':
         parser.print_help()
         exit(-1)
 
-    dl = Vimeo(
+    vimeo = Vimeo(
         playlist_url=args.url,
         output_path=args.output
     )
-    if not dl.send_request():
+    if not vimeo.send_request():
         logging.error("Unable to send request")
         exit(-1)
-    if not dl.parse_playlist():
+    if not vimeo.parse_playlist():
         logging.error("Unable to parse playlist")
         exit(-1)
 
-    master_file, streams = dl.save_media()
+    master_file, streams = vimeo.save_media()
     if master_file is None:
         logging.error("Unable to save media")
 
     logging.info(f"Master Playlist => {master_file}")
 
     if not args.no_download:
-        subprocess.run(
-            [
-                "N_m3u8DL-RE",
-                master_file,
-                "-M",
-                "format=mkv",
-                "--no-log",
-                "-sv", "best",
-                "-sa", "best"
-            ],
-            shell=False
-        )
-        for stream in streams:
-            os.remove(stream.get('url'))
-            os.remove(stream.get('init'))
-        os.remove(master_file)
+        try:
+            subprocess.run(
+                [
+                    "N_m3u8DL-RE",
+                    master_file,
+                    "-M",
+                    "format=mkv",
+                    "--no-log",
+                ],
+                shell=False
+            )
+        except FileNotFoundError:
+            logging.error("N_m3u8DL-RE not found")
+        finally:
+            for stream in streams:
+                os.remove(stream.get('url'))
+                os.remove(stream.get('init'))
+            os.remove(master_file)
