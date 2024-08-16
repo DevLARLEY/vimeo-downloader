@@ -5,8 +5,10 @@ Creates an HLS(m3u8) Manifest from a vimeo video in the specified output path. H
 > [!IMPORTANT]  
 > The input URL is not the video URL but rather the 'playlist.json'/'master.json' URL found in the Network Tab.
 
-```
-usage: vimeo_json.py [-h] [--url URL] [--output OUTPUT] [--no-download]
+```ruby
+usage: Vimeo playlist.json downloader [-h] [--url URL] [--output OUTPUT] [--no-download]
+
+Author: github.com/DevLARLEY
 
 options:
   -h, --help       show this help message and exit
@@ -24,10 +26,13 @@ options:
 > [!IMPORTANT]  
 > Does not work on embedded videos.
 
-```
-usage: vimeo_api.py [-h] [--id ID]
+```ruby
+usage: Vimeo API downloader [-h] [--id ID] [--no-download]
+
+Author: github.com/DevLARLEY
 
 options:
-  -h, --help  show this help message and exit
+  -h, --help     show this help message and exit
   --id ID
+  --no-download  Don't download the manifest
 ```
