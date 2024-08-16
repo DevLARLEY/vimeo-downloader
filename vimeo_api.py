@@ -74,7 +74,10 @@ class Vimeo:
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        prog="Vimeo API downloader",
+        description="Author: github.com/DevLARLEY"
+    )
     parser.add_argument("--id", action="store")
     parser.add_argument(
         '--no-download',
