@@ -221,7 +221,10 @@ class Vimeo:
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        prog="Vimeo playlist.json downloader",
+        description="Author: github.com/DevLARLEY"
+    )
     parser.add_argument("--url", action="store")
     parser.add_argument("--output", action="store", default=".")
     parser.add_argument(
